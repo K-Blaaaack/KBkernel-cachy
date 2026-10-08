@@ -5,6 +5,17 @@
 # Contributor: Tobias Powalowski <tpowa@archlinux.org>
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 
+#
+# ---------------------------------------------------------------------------
+# 派生与修改声明（GNU GPL v2 §2a）
+# 本配方是 CachyOS/linux-cachyos（源自 Arch Linux linux）配方的再分发修改版，
+# 属 KBkernel-cachy 项目。
+#   修改者：K-Black <aa1231951@outlook.com>
+#   修改内容：包命名与打包调整；内核选项开关（含调试信息 BTF）；构建者身份与时间戳；
+#             内核定制（各版本明细见对应 PKGBUILD 与仓库 README）。
+#   对应源码与构建配方：https://github.com/K-Blaaaack/KBkernel-cachy
+# 上游版权与署名归如上 Maintainer/Contributor 所有，依 GNU GPL v2 再分发。
+# ---------------------------------------------------------------------------
 ### BUILD OPTIONS
 # Set these variables to ANYTHING that is not null or choose proper variable to enable them
 
@@ -189,7 +200,7 @@ pkgdesc='Linux EEVDF + LTO + AutoFDO + Propeller Cachy Sauce Kernel by CachyOS w
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
-url="https://github.com/CachyOS/linux-cachyos"
+url="https://github.com/K-Blaaaack/KBkernel-cachy"
 license=('GPL-2.0-only')
 options=('!strip' '!debug' '!lto')
 makedepends=(
@@ -578,7 +589,7 @@ build() {
     cd "$_srcname"
     make "${BUILD_FLAGS[@]}" -j"$(nproc)" all
 
-    if ! _is_ci_build; then
+    if ! _is_ci_build && [ "$_use_debug_info" = "yes" ]; then
         make -C tools/bpf/bpftool vmlinux.h feature-clang-bpf-co-re=1
     fi
 
@@ -649,6 +660,8 @@ _package() {
 
     # remove build links
     rm "$modulesdir"/build
+    echo "Installing license..."
+    install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 COPYING
 }
 
 _package-headers() {
@@ -678,7 +691,7 @@ _package-headers() {
     install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
         localversion.* version vmlinux
 
-    if ! _is_ci_build; then
+    if ! _is_ci_build && [ "$_use_debug_info" = "yes" ]; then
         install -Dt "$builddir" -m644 tools/bpf/bpftool/vmlinux.h
     fi
 
