@@ -324,6 +324,34 @@ prepare() {
         fi
     done
 
+    # ===== 关闭 Intel 无线 LAR：补回 iwlwifi lar_disable 模块参数 =====
+    echo "Restoring iwlwifi lar_disable module param (Intel LAR off)..."
+    python3 - "$PWD" <<'KB_LAR_PY'
+import sys, pathlib
+root = pathlib.Path(sys.argv[1]) / "drivers/net/wireless/intel/iwlwifi"
+
+def _edit(rel, old, new):
+    p = root / rel
+    s = p.read_text(encoding="utf-8")
+    if new in s:
+        return
+    assert s.count(old) == 1, "KB-LAR anchor not unique: %s (%d)" % (rel, s.count(old))
+    p.write_text(s.replace(old, new, 1), encoding="utf-8")
+
+_edit("iwl-modparams.h",
+      "\tbool disable_11be;\n};",
+      "\tbool disable_11be;\n\tbool lar_disable;\n};")
+_edit("iwl-drv.c",
+      "module_param_named(disable_11be, iwlwifi_mod_params.disable_11be, bool, 0444);",
+      "module_param_named(disable_11be, iwlwifi_mod_params.disable_11be, bool, 0444);\n"
+      "module_param_named(lar_disable, iwlwifi_mod_params.lar_disable, bool, 0444);\n"
+      "MODULE_PARM_DESC(lar_disable, \"disable LAR functionality (default: N)\");")
+_edit("mvm/mvm.h",
+      "static inline bool iwl_mvm_is_lar_supported(struct iwl_mvm *mvm)\n{\n",
+      "static inline bool iwl_mvm_is_lar_supported(struct iwl_mvm *mvm)\n{\n"
+      "\tif (iwlwifi_mod_params.lar_disable)\n\t\treturn false;\n")
+print("KB-LAR: lar_disable module parameter restored")
+KB_LAR_PY
     echo "Setting config..."
     cp ../config .config
 
