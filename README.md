@@ -21,7 +21,7 @@
 - **ThinLTO**（`clang` + `ld.lld`）
 - 目标微架构 **x86-64-v3**（`generic_v3`）
 - 构建者标识 `user@host` 与真实编译时间戳
-- _（下一版本起）_ 关闭 **Intel 无线 LAR**：`iwlwifi lar_disable=1`
+- 关闭 **Intel 无线 LAR**：补丁补回 iwlwifi `lar_disable` 参数 + 包内 `/usr/lib/modprobe.d/iwlwifi-lar.conf`
 
 > 历史配方 7.2.6 – 7.2.8 另含 **5 级页表关闭（LA57）**，该配置已在后续版本移除。
 
@@ -41,7 +41,7 @@ cd recipes/<版本>
 makepkg -s --noconfirm
 ```
 
-产物：`linux-cachyos-<版本>-<pkgrel>-x86_64.pkg.tar.zst`（及 `-headers`）。
+产物：`linux-kbkernel-cachy-<版本>-<pkgrel>-x86_64.pkg.tar.zst`（及 `-headers`）。
 
 > 本仓库仅提供配方；内核源码来自上述公开上游，配方中的 `source` / `b2sums` 锁定了确切来源与校验值。
 
