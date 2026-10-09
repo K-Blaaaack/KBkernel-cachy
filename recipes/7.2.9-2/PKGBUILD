@@ -347,9 +347,9 @@ _edit("iwl-drv.c",
       "module_param_named(lar_disable, iwlwifi_mod_params.lar_disable, bool, 0444);\n"
       "MODULE_PARM_DESC(lar_disable, \"disable LAR functionality (default: N)\");")
 _edit("mvm/mvm.h",
-      "static inline bool iwl_mvm_is_lar_supported(struct iwl_mvm *mvm)\n{\n",
-      "static inline bool iwl_mvm_is_lar_supported(struct iwl_mvm *mvm)\n{\n"
-      "\tif (iwlwifi_mod_params.lar_disable)\n\t\treturn false;\n")
+      "\tif (mvm->trans->cfg->nvm_type == IWL_NVM_EXT)\n\t\treturn nvm_lar && tlv_lar;\n",
+      "\tif (iwlwifi_mod_params.lar_disable)\n\t\treturn false;\n"
+      "\tif (mvm->trans->cfg->nvm_type == IWL_NVM_EXT)\n\t\treturn nvm_lar && tlv_lar;\n")
 print("KB-LAR: lar_disable module parameter restored")
 KB_LAR_PY
     echo "Setting config..."
