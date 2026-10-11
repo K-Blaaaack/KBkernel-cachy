@@ -643,8 +643,8 @@ _package() {
     provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE V4L2LOOPBACK-MODULE NTSYNC-MODULE VHBA-MODULE ADIOS-MODULE)
     # Replace LTO kernel with the default kernel
     if _is_lto_kernel; then
-        provides+=(linux-KBkernel-cachy-lto=$_kernver)
-        replaces=(linux-KBkernel-cachy-lto)
+        provides+=(linux-kbkernel-cachy-lto=$_kernver)
+        replaces=(linux-kbkernel-cachy-lto)
     fi
 
     cd "$_srcname"
@@ -688,8 +688,8 @@ _package-headers() {
     provides=(LINUX-HEADERS)
 
     if _is_lto_kernel; then
-        provides+=(linux-KBkernel-cachy-lto-headers=$_kernver)
-        replaces=(linux-KBkernel-cachy-lto-headers)
+        provides+=(linux-kbkernel-cachy-lto-headers=$_kernver)
+        replaces=(linux-kbkernel-cachy-lto-headers)
         depends+=(clang llvm lld)
     fi
 

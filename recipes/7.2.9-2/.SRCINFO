@@ -59,8 +59,8 @@ pkgname = linux-kbkernel-cachy
 	provides = NTSYNC-MODULE
 	provides = VHBA-MODULE
 	provides = ADIOS-MODULE
-	provides = linux-KBkernel-cachy-lto=7.2.9-2
-	replaces = linux-KBkernel-cachy-lto
+	provides = linux-kbkernel-cachy-lto=7.2.9-2
+	replaces = linux-kbkernel-cachy-lto
 
 pkgname = linux-kbkernel-cachy-headers
 	pkgdesc = Headers and scripts for building modules for the KBkernel-cachy Linux（CachyOS EEVDF/LTO 基座 + BORE + ThinLTO + x86-64-v3，关闭 Intel 无线 LAR） kernel
@@ -78,5 +78,5 @@ pkgname = linux-kbkernel-cachy-headers
 	depends = llvm
 	depends = lld
 	provides = LINUX-HEADERS
-	provides = linux-KBkernel-cachy-lto-headers=7.2.9-2
-	replaces = linux-KBkernel-cachy-lto-headers
+	provides = linux-kbkernel-cachy-lto-headers=7.2.9-2
+	replaces = linux-kbkernel-cachy-lto-headers
